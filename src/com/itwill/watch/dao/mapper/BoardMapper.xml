@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwill.watch.dao.mapper.BoardMapper">
+<resultMap id="BoardWithUserInfoResultMap" type="Board" autoMapping="true">
+		<association property="userInfo" javaType="UserInfo" autoMapping="true"></association>
+</resultMap>
+<!-- select -->
+	<!-- 게시판 리스트 전체조회-->
+	<select id="findBoardListAll" resultMap="BoardWithUserInfoResultMap">
+		select b.*, u.userid
+		from board b
+		join userinfo u
+		on b.userno = u.userno
+		order by b.groupno desc, step asc
+	</select>
+
+	
+	<!-- 게시판 페이지 조회 -->
+	<select id="findBoardByIdxRangeParaMap" parameterType="map" resultType="Board">
+		select * from
+			(select rownum idx, s.*  from
+	            (select boardtype, boardtitle,boarddate, groupno, step, depth, userno  
+	             from board
+	             order by groupno desc,step asc ) s )
+		where idx &gt;= #{startNo} and idx &lt;= #{endNo}
+	</select>
+
+	<!-- 게시글 번호로 조회 -->
+	<select id="findBoardByNo" parameterType="int" resultType="Board">
+		select b.*
+		from board b
+		where b.boardno = #{boardNo}
+		order by groupno desc, step asc
+	</select>
+
+	<!-- 내 글 조회 -->
+	<select id="findBoardByUserNo" parameterType="int" resultType="Board">
+		select b.*
+		from board b
+		where b.userno = #{userNo}
+		order by groupno desc, step asc
+	</select>
+	
+	<!-- 1개의 그룹넘버의 답글 갯수 -->
+	<select id="commCount" parameterType="int" resultType="int">
+		select count(*)
+		from board b
+		where step >= 2 and b.groupno = #{groupNo}
+	</select>
+	
+	<!-- 1개의 그룹넘버의 답글 존재여부 존재하면 1, 존재하지않으면 0-->
+	<select id="isExistedCommByGroupNo" parameterType="int" resultType="int">
+		select case when count(*)>=1 then 1 else 0 end as isExisted
+		from board b
+		where step >= 2 and b.groupno = #{groupNo}
+	</select>
+	
+	
+<!-- insert -->
+	<!-- 게시글 insert -->
+		<insert id="createBoard" parameterType="Board">
+			insert into board(boardno, boardtype, boarddate, boardtitle, boardcontent, groupno, step, depth, userno, orderno) 
+	        values(Board_boardNo_SEQ.nextval,#{boardType},sysdate,#{boardTitle},#{boardContent},BOARD_BOARDNO_SEQ.currval,1,0,#{userNo},#{orderNo})
+		</insert>
+		
+	<!-- 답글 insert -->
+		<insert id="createBoardComment" parameterType="Board">
+			insert into board(boardno, boardtype, boarddate, boardtitle, boardcontent, groupno, step, depth, userno, orderno) 
+	        values(Board_boardNo_SEQ.nextval,#{boardType},sysdate,#{boardTitle},#{boardContent},#{groupNo},#{step}+1,#{depth}+1,#{userNo},#{orderNo})
+		</insert>
+
+<!-- update -->
+	<update id="updateBoard" parameterType="Board">
+		update board set boardtype=#{boardType}, boardtitle=#{boardTitle}, boardcontent=#{boardContent},orderno=#{orderNo}
+		where boardno = #{boardNo}
+	</update>
+	
+<!-- delete -->
+	<delete id="removeBoard" parameterType="int" >
+		delete from board b where b.boardno = #{boardNo}
+	</delete>
+	
+
+	
+</mapper>

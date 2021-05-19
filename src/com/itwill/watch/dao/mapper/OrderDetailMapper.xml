@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwill.watch.dao.mapper.OrderDetailMapper">
+<insert id="insertOrder" parameterType="OrderDetail" >
+insert into orderdetail(orderdetailno,orderqty,orderno,productno)
+values (ORDERDETAIL_ORDERDETAILNO_SEQ.nextval,#{orderQty},#{orderNo},#{productNo})
+</insert>
+
+<delete id="deleteDetailOrderNo" parameterType="int">
+delete from  orderdetail where orderno=#{orderno}
+</delete>
+
+<delete id="deleteDetailDetailNo" parameterType="int">
+delete from  orderdetail where ORDERDETAILNO=#{orderDetailNo}
+</delete>
+
+<update id="updateDetailQty" parameterType="map">
+update orderdetail set orderqty=#{updateQty} where orderdetailno=#{orderDetailNo}
+</update>
+
+<select id="isExistedOrderNo" parameterType="int" resultType="int">
+select count(orderno) from orderdetail where orderno=#{orderNo}
+</select>
+
+
+
+
+
+
+
+
+
+
+</mapper>

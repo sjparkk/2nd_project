@@ -1,0 +1,16 @@
+diff a/src/com/itwill/watch/dao/CardDao.java b/src/com/itwill/watch/dao/CardDao.java	(rejected hunks)
+@@ -7,12 +7,10 @@
+ public interface CardDao {
+ 	public int registerCard(Card card) throws Exception;
+ 
+-	public int unregisterCard(String cardNo) throws Exception;
+-
+-	public int updateCard(Card card) throws Exception;
++	public int unregisterCard(int cardNo) throws Exception;
+ 
+ 	public List<Card> cardListByUserNo(int userNo) throws Exception;
+ 
+-	public int existenceCheckCardNo(String cardNo) throws Exception;
++	public int existenceCheckCardNo(String cardId) throws Exception;
+ 
+ }

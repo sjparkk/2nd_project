@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwill.watch.dao.mapper.UserInfoMapper">
+	
+	<insert id="registUserInfo" parameterType="UserInfo">
+			INSERT INTO userInfo(userNo, userId, userPassword, email, phone, zipCode, address, userJoinDate,userPaymentPassword)
+    values          (UserInfo_userNo_SEQ.nextval,#{userId},#{userPassword},#{email},#{phone},#{zipCode},#{address}, sysdate,#{userPaymentPassword})
+	</insert>
+	
+	<!-- 회원아이디로 회원정보 수정  -->
+	<update id="updateUser" parameterType="UserInfo">
+			UPDATE userInfo SET
+			userPassword = #{userPassword}, email= #{email}, phone = #{phone}, zipCode=#{zipCode}, address = #{address}, userPaymentPassword = #{userPaymentPassword}
+			where userId=#{userId}	
+	</update>
+	
+	<!-- 회원아이디로 회원정보삭제 -->
+	<delete id="unregistUserInfo" parameterType="String">
+			DELETE from UserInfo where userId=#{userId}	
+	</delete>
+	
+	<!-- 회원아이디로 회원정보찾기 -->
+	<select id="findUser" parameterType="String" resultType="UserInfo">
+			SELECT userNO, userId, userPassword, email, phone, zipCode, address, userJoinDate,userPaymentPassword
+			FROM UserInfo
+			WHERE userId=#{userId}  
+	</select>
+	
+	
+	<!--아이디 체크  -->
+	<select id="existedUser" parameterType="String" resultType="int">
+			select count(*) from UserInfo where userId=#{user_id}
+	</select>
+	
+
+</mapper>
+	

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwill.watch.dao.mapper.ProductMapper">
+
+	<insert id="insertProduct" parameterType="Product">
+		insert into product values(product_productNo_seq.nextval,#{productName},#{productPrice},#{productDesc},#{productImage},#{productQty})
+	</insert>
+	
+	<!-- 상품 전체 List -->
+	<select id="productAllList" resultType="Product">
+		select * from product
+	</select>
+	
+	<!-- 상품 삭제 -->
+	<delete id="deleteProductByNo" parameterType="int">
+		delete from product where productNo=#{productNo}
+	</delete>
+	
+	<!-- 상품 가격으로 내림차순 정렬 -->
+	<select id="productListByPriceOrderDesc" resultType="Product">
+		select * from product order by productPrice desc
+	</select>
+	
+	<!-- 상품 가격으로 오름차순 정렬 -->
+	<select id="productListByPriceOrderAsc" resultType="Product">
+		select * from product order by productPrice asc
+	</select>
+	
+	<!-- 특정 단어 포함 상품 이름으로 검색 -->
+	<select id="findProductBySearchWord" parameterType="String" resultType="Product">
+		select * from product where productName like '%'||#{searchWord}||'%'
+	</select>
+	
+	<!--  상품 번호로 검색 -->
+	<select id="findProductByNo" resultType="Product">
+		select * from product where productNo = #{productNo}
+	</select>
+	
+	
+	<!-- 구매시 수량 감소 -->
+	<update id="updateQtyByNo" parameterType="int">
+		update product set productQty = productQty-1  where productNo = #{productNo}
+	</update>
+</mapper>

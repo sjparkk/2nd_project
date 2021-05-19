@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwill.watch.dao.mapper.CartMapper">
+	<insert id="insertCart" parameterType="Cart">
+		insert into cart values(cart_cartno_seq.nextval,#{productqty},#{userno},#{productno})
+	</insert>
+	
+	<!-- 회원번호로 cart List 찾기 -->
+	<select id="findCartListByUserNo" parameterType="int" resultType="Cart">
+		select * from cart where userno=#{userno}
+	</select>
+
+	<!-- 유저넘버 프로덕트 넘버로 카트수량 수정 -->
+	<update id="UpdateCartByUserNoAndProductNo" parameterType="com.itwill.watch.domain.Cart">
+		update cart set productqty=#{productqty} where userno=#{userno} and productno=#{productno}
+	</update>
+	
+	<!-- 카트번호로 카트 삭제 -->
+	<delete id="DeleteCartByCartNo" parameterType="int">
+		delete from cart where cartno=#{cartno}
+	</delete>
+	
+	<!-- 회원번호로 카트 전체 삭제 -->
+	<delete id="AllDeleteCart" parameterType="int">
+		delete from cart where userno=#{userno}
+	</delete>
+	
+	<!-- 카트번호로 카트에 담겨진 물건 수량 찾기 -->
+	<select id="findCartQtyByCartNo" parameterType="int" resultType="int">
+		select productqty from cart where cartno=#{cartno}
+	</select>
+	
+	<!-- 프로덕트넘버랑 유저넘버가 일치하는 테이블 찾기  -->
+	<select id="findCartByProductNoAndUserNo" parameterType="Cart" resultType="Cart">
+		select * from cart where userno=#{userno} and productno=#{productno}
+	</select>
+	
+</mapper>

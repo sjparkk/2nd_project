@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwill.watch.dao.mapper.BoardFileMapper">
+
+<!-- select -->
+	<!-- 특정 게시물 파일 전부 -->
+	<select id="findBoardFileAllByBoardNo" parameterType="int" resultType="BoardFile">
+		select * from boardfile  where boardno = #{boardNo}
+	</select>
+	
+	<!-- 특정 게시물 파일 한 개 -->
+	<select id="findBoardFileByBoardNo" parameterType="map" resultType="BoardFile">
+		select * from boardfile where boardno = #{boardNo} and boardfileno = #{boardFileNo}
+	</select>
+
+
+<!-- insert -->
+<insert id="createFile" parameterType="BoardFile">
+	insert into boardfile(boardfileno,filename,boardno) values (BoardFile_boardFileNo_SEQ.nextval,#{fileName},#{boardNo})
+</insert>
+
+
+<!-- 특정 게시물 전체 파일 삭제 -->
+<delete id="removeAllFileByBoardNo" parameterType="int">
+	delete from boardfile where boardno = #{boardNo}
+</delete>
+
+<!-- 특정 게시물 일부 파일 삭제 -->
+<delete id="removeFileByBoardNo" parameterType="map">
+	delete from boardfile where boardno = #{boardNo} and boardfileno = #{boardFileNo}
+</delete>
+
+</mapper>

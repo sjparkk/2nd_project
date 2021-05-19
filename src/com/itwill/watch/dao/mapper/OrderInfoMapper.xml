@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwill.watch.dao.mapper.OrderInfoMapper">
+
+
+	<resultMap type="com.itwill.watch.domain.OrderInfo" id="orderInfoResultMap"
+		autoMapping="true">
+		<result column="ORDERNO" property="orderNo"/>
+		<collection property="orderDetailList"
+			ofType="com.itwill.watch.domain.OrderDetail"
+			autoMapping="true">
+			<result column="ORDERDETAILNO"  property="orderDetailNo"/>
+			<association property="product" autoMapping="true">
+				<result column="PRODUCTNO" property="productNo"/>
+			</association>
+		</collection>
+	</resultMap>
+	<resultMap type="OrderInfo" id="orderInfoAllResultMap" autoMapping="true">
+	<result column="ORDERNO" property="orderNo"/>
+	<collection property="orderDetailList" ofType="OrderDetail" autoMapping="true">
+	<result column="ORDERDETAILNO" property="orderDetailNo"/>
+	<association property="product" autoMapping="true">
+	<result column="PRODUCTNO" property="productNo"/>
+	</association>
+	</collection>
+	</resultMap>
+	
+
+
+
+
+
+
+
+
+	<!-- 회원 한명의 주문 전체내역 -->
+	<select id="findAllOrder" parameterType="int" resultType="com.itwill.watch.domain.OrderInfo">
+	
+	select * from orderinfo where userno=#{userNo}
+	
+	</select>
+	
+	<!--  주문한개검색 -->
+	<select id="findOrderByNo" parameterType="int"
+		resultMap="orderInfoResultMap">
+		select o.*,od.*,p.* 
+		from orderinfo o join orderdetail od on  o.orderno=od.orderno join product p on od.productno=p.productno
+		where o.orderno=#{orderNo}
+	</select>
+	<!-- 회원한명의 주문한개 삭제 -->
+	<delete id="deleteOrderOne" parameterType="int">
+	
+	delete from  orderinfo where orderno=#{orderNo}
+	
+	</delete>
+	
+	<!-- 회원한명의 주문전체 삭제 -->
+	<delete id="deleteOrderAll" parameterType="int">
+	delete from orderinfo where userno=#{userNo}
+	</delete>
+	
+	
+	<!-- 회원한명의 전체주문목록 -->
+	<select id="findOrderAllByNo" parameterType="int" resultMap="orderInfoAllResultMap">
+	select  oi.*,p.*,od.* from orderinfo oi 
+	join orderdetail od on oi.orderno=od.orderno 
+	join product p on od.productno=p.productno 
+	where oi.userno=#{userNo}
+	</select>
+	
+	<!-- orderinfo 추가  -->
+	<insert id="insertOrderInfo" parameterType="OrderInfo" >
+	insert into orderinfo(orderno,orderdate,orderprice,orderdesc,userno,cardno) 
+	values (ORDERINFO_ORDERNO_SEQ.nextval,sysdate,#{orderPrice},#{orderDesc},#{userNo},#{cardNo})
+	</insert>
+	
+	
+
+
+</mapper>

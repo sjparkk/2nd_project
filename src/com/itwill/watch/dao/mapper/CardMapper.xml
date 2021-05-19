@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwill.watch.dao.mapper.CardMapper">
+	<!-- 카드등록 -->
+	<insert id="registerCard" parameterType="Card">
+		insert into card
+		values(Card_cardNo_SEQ.nextval, #{cardId}, #{cvc}, #{cardEXP},
+		#{cardPassword},
+		#{userNo})
+	</insert>
+
+	<!-- 카드등록해제 -->
+	<delete id="unregisterCard" parameterType="int">
+		delete from card where
+		cardNo=#{cardNo}
+	</delete>
+
+	<!-- 한 유저의 카드목록 -->
+	<select id="cardListByUserNo" parameterType="int"
+		resultType="Card">
+		select
+		cardno,
+		substr(cardId, 1, 4) || '-****-****-' ||
+		substr(cardId, 16, 4) as cardId,
+		userno
+		from card where
+		userNo=#{userNo}
+	</select>
+
+	<!-- 카드등록시 존재여부 체크 -->
+	<select id="existenceCheckCardNo" parameterType="string"
+		resultType="int">
+		select count(*) isExisted from card where
+		cardId=#{cardId}
+	</select>
+
+	<!-- 카드PK로 카드번호 선택 -->
+	<select id="cardIdByCardNo" parameterType="int"
+		resultType="string">
+		select substr(cardId, 1, 4) || '-****-****-' ||
+		substr(cardId, 16, 4) as
+		cardId from card where cardNo=#{cardNo}
+	</select>
+</mapper>
